@@ -10,4 +10,6 @@ public interface AuthorService extends BaseService<Author>{
 
     List<Author> findAll();
 
+    List<Author> getAuthorsByFirstNameEnding(String suffix);
+
 }

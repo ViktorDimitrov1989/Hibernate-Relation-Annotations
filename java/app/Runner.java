@@ -17,6 +17,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -27,6 +28,7 @@ public class Runner implements CommandLineRunner{
     private BookService bookService;
     private AuthorService authorService;
     private CategoryService categoryService;
+    private BufferedReader bufferedReader;
 
     @Autowired
     public Runner(BookService bookService, AuthorService authorService, CategoryService categoryService) {
@@ -37,6 +39,8 @@ public class Runner implements CommandLineRunner{
 
     @Override
     public void run(String... strings) throws Exception {
+        this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
         //1//
         //bookTitlesByAgeRestriction();
         //2//
@@ -48,7 +52,69 @@ public class Runner implements CommandLineRunner{
         //5//
         //listAllBooksByCategories();
         //6//
+        //listBooksReleasedBeforeData();
+        //7//
+        //listAutorsWithFirstNameEndingWithGivenString();
+        //8//
+        //listAllBooksContainingString();
+        //9//
+        //listBooksByAuthorStartsWithString();
+        //10//
+        //listCountOfBooksByTitleLength();
 
+    }
+
+    private void listCountOfBooksByTitleLength() throws IOException {
+        int length = Integer.parseInt(this.bufferedReader.readLine());
+
+        int result = this.bookService.getBooksByGivenCharLength(length);
+        System.out.println(result);
+    }
+
+    private void listBooksByAuthorStartsWithString() throws IOException {
+        String str = this.bufferedReader.readLine();
+
+        List<Book> result = this.bookService.getBooksByAuthorLastNameContainsString(str);
+
+        for (Book book : result) {
+            System.out.println(book.getTitle());
+        }
+    }
+
+    private void listAllBooksContainingString() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String str = reader.readLine();
+
+        List<Book> result = this.bookService.getBooksContainingString(str);
+
+        for (Book book : result) {
+            System.out.println(book.getTitle());
+        }
+    }
+
+    private void listAutorsWithFirstNameEndingWithGivenString() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        List<Author> result = this.authorService.getAuthorsByFirstNameEnding(reader.readLine());
+
+        for (Author author : result) {
+            System.out.println(String.format("%s %s", author.getFirstName(), author.getLastName()));
+        }
+
+    }
+
+    private void listBooksReleasedBeforeData() throws IOException, ParseException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        Date targetDate =  df.parse(reader.readLine());
+
+        List<Book> result = this.bookService.getBooksBeforeGivenDate(targetDate);
+
+        for (Book book : result) {
+            System.out.println(String.format(
+                    "Title: %s, Edition type: %s, Price: %.2f",
+                    book.getTitle(), book.getEditionType().toString(), book.getPrice()));
+        }
 
     }
 

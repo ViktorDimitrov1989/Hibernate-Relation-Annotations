@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -49,5 +50,25 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> getBooksByCategories(List<Category> categories) {
         return this.bookRepository.findAllByCategoriesIn(categories);
+    }
+
+    @Override
+    public List<Book> getBooksBeforeGivenDate(Date date) {
+        return this.bookRepository.findAllByReleaseDateBefore(date);
+    }
+
+    @Override
+    public List<Book> getBooksContainingString(String str) {
+        return this.bookRepository.findAllByTitleContainingIgnoreCase(str);
+    }
+
+    @Override
+    public List<Book> getBooksByAuthorLastNameContainsString(String string) {
+        return this.bookRepository.findAllByAuthorLastNameStartingWith(string);
+    }
+
+    @Override
+    public int getBooksByGivenCharLength(long length) {
+        return this.bookRepository.findCountOfBooksWhereTitleIsLongerThan(length);
     }
 }

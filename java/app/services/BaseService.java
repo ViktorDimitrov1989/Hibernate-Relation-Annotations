@@ -7,4 +7,5 @@ public interface BaseService<T> {
     void save(T object);
 
 
+
 }

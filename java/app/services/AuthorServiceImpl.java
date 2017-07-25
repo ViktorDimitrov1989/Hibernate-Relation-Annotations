@@ -23,6 +23,11 @@ public class AuthorServiceImpl implements AuthorService{
     }
 
     @Override
+    public List<Author> getAuthorsByFirstNameEnding(String suffix) {
+        return this.authorRepository.findAllByFirstNameEndingWith(suffix);
+    }
+
+    @Override
     public void save(Author object) {
         this.authorRepository.save(object);
     }
