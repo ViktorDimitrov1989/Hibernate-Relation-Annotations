@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,11 +37,87 @@ public class Runner implements CommandLineRunner{
 
     @Override
     public void run(String... strings) throws Exception {
-        this.importAuthors();
-        this.importCategories();
-        this.importBooks();
+        //1//
+        //bookTitlesByAgeRestriction();
+        //2//
+        //listGoldenBooks();
+        //3//
+        //listBooksBetweenBounds();
+        //4//
+        //listAllNotReleasedIn();
+        //5//
+        //listAllBooksByCategories();
+        //6//
+
 
     }
+
+    private void listAllBooksByCategories() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        String[] categories = reader.readLine().split("\\s+");
+
+        List<Category> catList =  new ArrayList<>();
+        for (String category : categories) {
+            Category c = this.categoryService.findByName(category);
+            if (c != null){
+                catList.add(c);
+            }
+        }
+
+        List<Book> result = this.bookService.getBooksByCategories(catList);
+
+        String debug = "";
+
+        for (Book book : result) {
+            System.out.println(book.getTitle());
+        }
+
+
+    }
+
+    private void listAllNotReleasedIn() {
+        List<Book> result = this.bookService.getBooksNotReleasedInYear(2000);
+
+        for (Book book : result) {
+            System.out.println(book.getTitle());
+        }
+
+    }
+
+    private void listBooksBetweenBounds() {
+        List<Book> res = this.bookService.getBooksBetweenBounds();
+
+        String debug = "";
+
+        for (Book book : res) {
+            System.out.println(String.format("$%s - %.2f", book.getTitle(), book.getPrice()));
+        }
+
+    }
+
+    private void listGoldenBooks() {
+
+        List<Book> books = this.bookService.getAllGoldenBooks();
+
+        for (Book book : books) {
+            System.out.println(book.getTitle());
+        }
+
+    }
+
+    private void bookTitlesByAgeRestriction() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String ageRestriction = reader.readLine();
+
+        List<Book> result = this.bookService.getBooksByAgeRestriction(ageRestriction);
+
+        for (Book book : result) {
+            System.out.println(book.getTitle());
+        }
+
+    }
+
 
     private void importAuthors() throws IOException {
         final String path = "/src/main/resources/";

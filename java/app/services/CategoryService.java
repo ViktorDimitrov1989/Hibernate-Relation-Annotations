@@ -10,4 +10,6 @@ public interface CategoryService extends BaseService<Category>{
 
     List<Category> findAll();
 
+    Category findByName(String name);
+
 }
